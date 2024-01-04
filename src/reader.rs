@@ -61,7 +61,7 @@ pub struct R1CSFile<F: PrimeField> {
 }
 
 /// load witness file by filename with autodetect encoding (bin or json).
-pub(crate) fn load_witness_from_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> Vec<Fr> {
+pub fn load_witness_from_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> Vec<Fr> {
     if filename.as_ref().ends_with("json") {
         load_witness_from_json_file::<Fr>(filename)
     } else {
@@ -70,7 +70,7 @@ pub(crate) fn load_witness_from_file<Fr: PrimeField>(filename: impl AsRef<Path>)
 }
 
 /// load witness from bin file by filename
-fn load_witness_from_bin_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> Vec<Fr> {
+pub fn load_witness_from_bin_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> Vec<Fr> {
     let reader = OpenOptions::new()
         .read(true)
         .open(filename)
@@ -356,7 +356,7 @@ pub fn load_r1cs<Fr: PrimeField>(filename: impl AsRef<Path>) -> R1CS<Fr> {
 }
 
 /// load r1cs from json file by filename
-fn load_r1cs_from_json_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> R1CS<Fr> {
+pub fn load_r1cs_from_json_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> R1CS<Fr> {
     let reader = OpenOptions::new()
         .read(true)
         .open(filename)
