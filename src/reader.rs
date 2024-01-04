@@ -80,7 +80,7 @@ fn load_witness_from_bin_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> Vec
 }
 
 /// load witness from u8 array by a reader
-fn load_witness_from_bin_reader<Fr: PrimeField, R: Read>(
+pub fn load_witness_from_bin_reader<Fr: PrimeField, R: Read>(
     mut reader: R,
 ) -> Result<Vec<Fr>, anyhow::Error> {
     let mut wtns_header = [0u8; 4];
@@ -134,7 +134,7 @@ fn load_witness_from_bin_reader<Fr: PrimeField, R: Read>(
 }
 
 /// load witness from json file by filename
-fn load_witness_from_json_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> Vec<Fr> {
+pub fn load_witness_from_json_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> Vec<Fr> {
     let reader = OpenOptions::new()
         .read(true)
         .open(filename)
@@ -143,7 +143,7 @@ fn load_witness_from_json_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> Ve
 }
 
 /// load witness from json by a reader
-fn load_witness_from_json<Fr: PrimeField, R: Read>(reader: R) -> Vec<Fr> {
+pub fn load_witness_from_json<Fr: PrimeField, R: Read>(reader: R) -> Vec<Fr> {
     let witness: Vec<String> = serde_json::from_reader(reader).expect("unable to read.");
     witness
         .into_iter()
@@ -152,7 +152,7 @@ fn load_witness_from_json<Fr: PrimeField, R: Read>(reader: R) -> Vec<Fr> {
 }
 
 /// load r1cs from bin file by filename
-fn load_r1cs_from_bin_file<F: PrimeField>(filename: impl AsRef<Path>) -> R1CS<F> {
+pub fn load_r1cs_from_bin_file<F: PrimeField>(filename: impl AsRef<Path>) -> R1CS<F> {
     let reader = OpenOptions::new()
         .read(true)
         .open(filename.as_ref())
@@ -333,7 +333,7 @@ fn from_reader<Fr: PrimeField, R: Read + Seek>(mut reader: R) -> Result<R1CSFile
 }
 
 /// load r1cs from bin by a reader
-fn load_r1cs_from_bin<Fr: PrimeField, R: Read + Seek>(reader: R) -> R1CS<Fr> {
+pub fn load_r1cs_from_bin<Fr: PrimeField, R: Read + Seek>(reader: R) -> R1CS<Fr> {
     let file = from_reader(reader).expect("unable to read.");
     let num_inputs = (1 + file.header.n_pub_in + file.header.n_pub_out) as usize;
     let num_variables = file.header.n_wires as usize;
@@ -365,7 +365,7 @@ fn load_r1cs_from_json_file<Fr: PrimeField>(filename: impl AsRef<Path>) -> R1CS<
 }
 
 /// load r1cs from json by a reader
-fn load_r1cs_from_json<Fr: PrimeField, R: Read>(reader: R) -> R1CS<Fr> {
+pub fn load_r1cs_from_json<Fr: PrimeField, R: Read>(reader: R) -> R1CS<Fr> {
     let circuit_json: CircuitJson = serde_json::from_reader(reader).expect("unable to read.");
 
     let num_inputs = circuit_json.num_inputs + circuit_json.num_outputs + 1;
