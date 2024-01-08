@@ -98,8 +98,8 @@ impl WitnessCalculator {
         Self::from_file(path)
     }
 
-    pub fn from_file(path: impl AsRef<std::path::Path>) -> Result<Self> {
-        cfg_if::cfg_if! {
+    pub fn new_store() -> Store {
+	cfg_if::cfg_if! {
             if #[cfg(feature = "llvm")] {
                 let compiler = LLVM::new();
                 let store = Store::new(compiler);
@@ -107,6 +107,11 @@ impl WitnessCalculator {
                 let store = Store::default();
             }
         }
+	store
+    }
+
+    pub fn from_file(path: impl AsRef<std::path::Path>) -> Result<Self> {
+	let store = Self::new_store();
         let module = Module::from_file(&store, path)?;
         Self::from_module(module, store)
     }
