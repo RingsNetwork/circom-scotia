@@ -182,7 +182,14 @@ impl CircomBase for Wasm {
     // Default to version 1 if it isn't explicitly defined
     fn get_version(&self, store: &mut impl AsStoreMut) -> Result<u32> {
         match self.0.exports.get_function("getVersion") {
-            Ok(func) => Ok(func.call(store, &[])?[0].unwrap_i32() as u32),
+            Ok(func) => {
+		let ret = func.call(store, &[])?;
+		if let Some(r) = ret.first() {
+		    Ok(r.unwrap_i32() as u32)
+		} else {
+		    Ok(1)
+		}
+	    }
             Err(_) => Ok(1),
         }
     }
